@@ -9,25 +9,11 @@
 PROJECT(lua-zlib C)
 CMAKE_MINIMUM_REQUIRED (VERSION 2.6)
 
-option(USE_LUA "Use Lua (also called 'C' Lua) includes (default)" ON)
-option(USE_LUAJIT "Use LuaJIT includes instead of 'C' Lua ones (recommended, if you're using LuaJIT, but disabled by default)")
-set(USE_LUA_VERSION 5.1 CACHE STRING "Set the Lua version to use (default: 5.1)")
-
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
-if(USE_LUAJIT)
-# Find luajit
-        find_package(LuaJIT REQUIRED)
-        set(USE_LUA OFF)
-# / Find lua
-endif()
-
-if(USE_LUA)
 # Find lua
-        find_package(Lua ${USE_LUA_VERSION} EXACT REQUIRED)
+find_package(Lua REQUIRED)
 # / Find lua
-endif()
-
 
 # Basic configurations
   SET(INSTALL_CMOD share/lua/cmod CACHE PATH "Directory to install Lua binary modules (configure lua via LUA_CPATH)")
@@ -49,7 +35,7 @@ endif()
 # Define how to test zlib.so:
   INCLUDE(CTest)
   SET(LUA_BIN "lua${LUA_VERSION_MAJOR}.${LUA_VERSION_MINOR}")
-  FIND_PROGRAM(LUA NAMES ${LUA_BIN} lua luajit lua.bat)
+  FIND_PROGRAM(LUA NAMES lua51 lua5.1 lua52 lua5.2 lua53 lua5.3 lua luajit lua.bat)
   ADD_TEST(basic ${LUA} ${CMAKE_CURRENT_SOURCE_DIR}/test.lua ${CMAKE_CURRENT_SOURCE_DIR}/ ${CMAKE_CURRENT_BINARY_DIR}/)
   SET_TESTS_PROPERTIES(basic
                        PROPERTIES
